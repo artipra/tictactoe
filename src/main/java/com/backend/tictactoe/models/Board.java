@@ -42,4 +42,13 @@ public class Board {
     public void setSymbol(GameSymbol symbol) {
         this.symbol = symbol;
     }
+
+    public boolean isEmpty(int row, int col) {
+        return cells.get(row).get(col) != null;
+
+    }
+
+    public void update(BoardCell move) {
+        cells.get(move.getRow()).get(move.getColumn()).setSymbol(move.getSymbol());
+    }
 }
