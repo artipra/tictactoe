@@ -13,6 +13,18 @@ public class BoardCell {
         return column;
     }
 
+    public BoardCell(int row, int column, GameSymbol symbol) {
+        this.row = row;
+        this.column = column;
+        this.symbol = symbol;
+    }
+
+    public BoardCell(int row, int column) {
+        this.row = row;
+        this.column = column;
+    }
+
+    public BoardCell(){}
     public GameSymbol getSymbol() {
         return symbol;
     }

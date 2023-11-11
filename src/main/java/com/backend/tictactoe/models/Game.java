@@ -2,6 +2,8 @@ package com.backend.tictactoe.models;
 
 import com.backend.tictactoe.exception.InvalidPlayerException;
 import com.backend.tictactoe.exception.invalidMoveException;
+import com.backend.tictactoe.strategy.winning.RowWinningStrategy;
+import com.backend.tictactoe.strategy.winning.WinningStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +17,9 @@ public class Game {
     private List<Player> players = new ArrayList();
     private GameStatus status;
     private int nextPlayerIndex = 0;
+    private Player winner;
+
+    private List<WinningStrategy> strategies = List.of(new RowWinningStrategy());
     private Game(){}
 
     public static Builder builder(){
@@ -24,6 +29,10 @@ public class Game {
         this.board = board;
         this.players = players;
         this.status = status;
+    }
+
+    public Player getWinner() {
+        return winner;
     }
 
     public Board getBoard() {
@@ -38,22 +47,29 @@ public class Game {
         return status;
     }
 
-    public void start(){}
+    public void start(){
+    nextPlayerIndex = (int)(Math.random()*players.size());
+    status = GameStatus.IN_PROGRESS;
+    }
     public void makemove(){
         // Get the next player
-        BoardCell move = getNextMove();
         //Get the next move from the player
         //make move
         //Bot playing strategy
         // user input scanner
         // validate the move - check if cells was already filled
-
         // update the board
+        BoardCell move = getNextMove();
+//        board.printBoard();
+//        System.out.println();
         board.update(move);
+      //  board.printBoard();
+       // System.out.println();
         // check win
-        if(checkWinner()){
+        if(checkWinner(move.getSymbol())){
             status = GameStatus.FINSIHED;
-
+            winner = getNextPlayer();
+            return;
         }
         //check draw
         if(checkDraw()){
@@ -76,8 +92,21 @@ public class Game {
             throw new invalidMoveException(move.getRow(),move.getColumn());
         }
     }
-    private boolean checkWinner(){ return false;}
+    private boolean checkWinner(GameSymbol symbol){
+        for(WinningStrategy strategy : strategies){
+            boolean hasWinner = strategy.checkWinner(getBoard(),symbol);
+            if(hasWinner) return true;
+        }
+       return false;
+    }
+
+
+
     private boolean checkDraw(){ return false;}
+
+    public Player getNextPlayer() {
+        return players.get(nextPlayerIndex);
+    }
 
 
     //Builder pattern
