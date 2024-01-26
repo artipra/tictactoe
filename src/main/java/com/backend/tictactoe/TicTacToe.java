@@ -58,7 +58,7 @@ public class TicTacToe {
 		return GameSymbol.O;
 	}
 
-	private static HumanPlayer getUserInput() {
+	public static HumanPlayer getUserInput() {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Enter name");
 		String name = sc.nextLine();
